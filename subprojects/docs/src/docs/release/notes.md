@@ -121,6 +121,10 @@ task myTask {
 }
 ```
 
+### Deprecation of `TaskInternal.execute()`
+
+In this release we deprecate calling `TaskInternal.execute()`. Calling `task.execute()` should never be necessary. Tasks should be executed by requesting them from the command line or via the Tooling API. 
+
 ## Potential breaking changes
 
 ### Changes to incubating native compile and link tasks
