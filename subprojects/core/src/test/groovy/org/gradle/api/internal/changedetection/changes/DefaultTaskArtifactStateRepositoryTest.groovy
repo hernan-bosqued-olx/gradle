@@ -120,7 +120,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any output file no longer exists"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         outputFile.delete()
@@ -131,7 +131,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any file in output dir no longer exists"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         outputDirFile.delete()
@@ -142,7 +142,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any output file has changed type"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         outputFile.delete()
@@ -154,7 +154,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any file in output dir has changed type"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         outputDirFile.delete()
@@ -166,7 +166,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any output file has changed hash"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         outputFile.write("new content")
@@ -177,7 +177,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any file in output dir has changed hash"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         outputDirFile.write("new content")
@@ -188,7 +188,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any output files added to set"() {
         when:
-        execute(task)
+        executeTasks(task)
         TaskInternal outputFilesAddedTask = builder.withOutputFiles(outputFile, outputDir, temporaryFolder.createFile("output-file-2"), emptyOutputDir, missingOutputFile).task()
 
         then:
@@ -197,7 +197,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any output files removed from set"() {
         when:
-        execute(task)
+        executeTasks(task)
         TaskInternal outputFilesRemovedTask = builder.withOutputFiles(outputFile, emptyOutputDir, missingOutputFile).task()
 
         then:
@@ -208,7 +208,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
         when:
         TaskInternal task1 = builder.withOutputFiles(outputFile).task()
         TaskInternal task2 = builder.withType(TaskSubType.class).withOutputFiles(outputFile).task()
-        execute(task1, task2)
+        executeTasks(task1, task2)
 
         then:
         outOfDate task
@@ -218,7 +218,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
         final addedFile = temporaryFolder.createFile("other-input")
 
         when:
-        execute(task)
+        executeTasks(task)
         TaskInternal inputFilesAdded = builder.withInputFiles(file: [inputFile, addedFile], dir: [inputDir], missingFile: [missingInputFile]).task()
 
         then:
@@ -227,7 +227,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any input files removed from set"() {
         when:
-        execute(task)
+        executeTasks(task)
         TaskInternal inputFilesRemoved = builder.withInputFiles(file: [inputFile], dir: [], missingFile: [missingInputFile]).task()
 
         then:
@@ -236,7 +236,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any input file has changed hash"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         inputFile.write("some new content")
@@ -247,7 +247,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any input file has changed type"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         inputFile.delete()
@@ -259,7 +259,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any input file no longer exists"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         inputFile.delete()
@@ -271,7 +271,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
     def "artifacts are not up to date when any input file did not exist and now does"() {
         given:
         inputFile.delete()
-        execute(task)
+        executeTasks(task)
 
         when:
         inputFile.createNewFile()
@@ -282,7 +282,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any file created in input dir"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         def file = inputDir.file("other-file").createFile()
@@ -293,7 +293,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any file deleted from input dir"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         inputDirFile.delete()
@@ -304,7 +304,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any file in input dir changes hash"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         inputDirFile.writelns("new content")
@@ -315,7 +315,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any file in input dir changes type"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         inputDirFile.delete()
@@ -327,7 +327,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any input property value changed"() {
         when:
-        execute(builder.withProperty("prop", "original value").task())
+        executeTasks(builder.withProperty("prop", "original value").task())
         final inputPropertiesTask = builder.withProperty("prop", "new value").task()
 
         then:
@@ -337,7 +337,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
     def "input property value can be null"() {
         when:
         TaskInternal task = builder.withProperty("prop", null).task()
-        execute(task)
+        executeTasks(task)
 
         then:
         upToDate(task)
@@ -345,7 +345,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any input property added"() {
         when:
-        execute(task)
+        executeTasks(task)
         final addedPropertyTask = builder.withProperty("prop2", "value").task()
 
         then:
@@ -354,7 +354,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are not up to date when any input property removed"() {
         given:
-        execute(builder.withProperty("prop2", "value").task())
+        executeTasks(builder.withProperty("prop2", "value").task())
 
         expect:
         outOfDate task
@@ -409,7 +409,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are up to date when nothing has changed since output files were generated"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         expect:
         repository.getStateFor(task).isUpToDate([])
@@ -418,7 +418,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are up to date when output file which did not exist now exists"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         missingOutputFile.touch()
@@ -429,7 +429,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "artifacts are up to date when output dir which was empty is no longer empty"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         emptyOutputDir.file("some-file").touch()
@@ -448,7 +448,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "has task history from previous execution"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         when:
         TaskArtifactState state = repository.getStateFor(task)
@@ -461,7 +461,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
         when:
         TaskInternal task1 = task
         TaskInternal task2 = builder.withPath("other").withOutputDirs(outputDir).createsFiles(outputDir.file("output2")).task()
-        execute(task1, task2)
+        executeTasks(task1, task2)
 
         then:
         upToDate task1
@@ -472,7 +472,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
         when:
         TaskInternal task1 = builder.withOutputFiles(outputFile).task()
         TaskInternal task2 = builder.withPath("other").withOutputFiles(outputFile).task()
-        execute(task1, task2)
+        executeTasks(task1, task2)
 
         then:
         upToDate task1
@@ -483,7 +483,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
         when:
         TaskInternal task1 = task
         TaskInternal task2 = builder.withPath("other").withOutputDirs(outputDir).task()
-        execute(task1, task2)
+        executeTasks(task1, task2)
 
         then:
         upToDate task1
@@ -493,7 +493,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
     def "does not consider existing files in output directory as produced by task"() {
         when:
         TestFile otherFile = outputDir.file("other").createFile()
-        execute(task)
+        executeTasks(task)
         otherFile.delete()
 
         then:
@@ -511,7 +511,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
         !state.isUpToDate([])
 
         when:
-        task.execute()
+        executeTasks(task)
         fileSystemMirror.beforeTaskOutputsGenerated()
         otherFile.write("new content")
         state.snapshotAfterTaskExecution(null)
@@ -525,7 +525,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "file is no longer considered produced by task once it is deleted"() {
         given:
-        execute(task)
+        executeTasks(task)
 
         outputDirFile.delete()
         TaskArtifactState state = repository.getStateFor(task)
@@ -544,7 +544,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
     def "artifacts are up to date when task does not accept any inputs"() {
         when:
         TaskInternal noInputsTask = builder.doesNotAcceptInput().task()
-        execute(noInputsTask)
+        executeTasks(noInputsTask)
 
         then:
         upToDate noInputsTask
@@ -560,7 +560,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
     def "artifacts are up to date when task has no input files"() {
         when:
         TaskInternal noInputFilesTask = builder.withInputFiles([:]).task()
-        execute(noInputFilesTask)
+        executeTasks(noInputFilesTask)
 
         then:
         upToDate noInputFilesTask
@@ -569,7 +569,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
     def "artifacts are up to date when task has no output files"() {
         when:
         TaskInternal noOutputsTask = builder.withOutputFiles([:]).task()
-        execute(noOutputsTask)
+        executeTasks(noOutputsTask)
 
         then:
         upToDate noOutputsTask
@@ -582,7 +582,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
         TaskInternal task1 = builder.withOutputDirs(dir: [outputDir]).createsFiles(outputDirFile).withPath('task1').task()
         TaskInternal task2 = builder.withOutputDirs(dir: [outputDir2]).createsFiles(outputDirFile2).withPath('task2').task()
 
-        execute(task1, task2)
+        executeTasks(task1, task2)
 
         then:
         def state1 = repository.getStateFor(task1)
@@ -602,7 +602,7 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
 
     def "has origin build ID after executed"() {
         when:
-        execute(task)
+        executeTasks(task)
 
         then:
         repository.getStateFor(task).originBuildInvocationId == buildScopeId.id
@@ -651,13 +651,13 @@ class DefaultTaskArtifactStateRepositoryTest extends AbstractProjectBuilderSpec 
         assert state.isUpToDate([])
     }
 
-    private void execute(TaskInternal... tasks) {
+    private void executeTasks(TaskInternal... tasks) {
         for (TaskInternal task : tasks) {
             TaskArtifactState state = repository.getStateFor(task)
             state.isUpToDate([])
             // reset state
             fileSystemMirror.beforeTaskOutputsGenerated()
-            task.execute()
+            execute(task)
             state.snapshotAfterTaskExecution(null)
         }
         // reset state
