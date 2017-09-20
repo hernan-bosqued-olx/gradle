@@ -123,7 +123,8 @@ task myTask {
 
 ### Deprecation of `TaskInternal.execute()`
 
-In this release we deprecate calling `TaskInternal.execute()`. Calling `task.execute()` should never be necessary. Tasks should be executed by requesting them from the command line or via the Tooling API. 
+In this release we deprecate calling `TaskInternal.execute()`. Calling `task.execute()` should never be necessary.
+There are better ways for re-using task logic, for example by using [task dependencies](userguide/more_about_tasks.html#sec:adding_dependencies_to_tasks), [task rules](userguide/more_about_tasks.html#sec:task_rules), extracting a re-usable piece of logic from your task which can be called on its own (e.g. `project.copy` vs. the `Copy` task) or using the [worker API](userguide/custom_tasks.html#worker_api).
 
 ## Potential breaking changes
 
